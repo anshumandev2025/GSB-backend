@@ -9,8 +9,33 @@ export class EmployeeService {
   constructor(
     @InjectModel(Employee.name) private EmployeeModel: Model<Employee>,
   ) {}
-  async getAllEmployees(): Promise<Employee[]> {
-    return this.EmployeeModel.find().select('-employee_password').exec();
+  async getAllEmployees(
+    page: number = 1,
+    limit: number = 10,
+    query: string = '',
+    filter: string = '',
+  ): Promise<{ data: Employee[]; total: number }> {
+    const skip = (page - 1) * limit;
+    const queryFilter: any = {};
+    if (query) {
+      queryFilter.$or = [
+        { employee_name: { $regex: query, $options: 'i' } }, // Case-insensitive search
+        { employee_email_address: { $regex: query, $options: 'i' } },
+        { employee_mobile_number: { $regex: query, $options: 'i' } },
+      ];
+    }
+    if (filter) {
+      queryFilter.is_employee_active = filter === 'active';
+    }
+    const employees = await this.EmployeeModel.find(queryFilter)
+      .select('-employee_password')
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    const total = await this.EmployeeModel.countDocuments().exec();
+
+    return { data: employees, total };
   }
 
   async createEmployee(createEmployee: CreateEmployeeDTO): Promise<Employee> {
@@ -53,6 +78,21 @@ export class EmployeeService {
   async updateEmployee(
     updateEmployeeDTO: UpdateEmployeeDTO,
   ): Promise<Employee> {
+    const isEmailExist = await this.EmployeeModel.findOne({
+      employee_email_address: updateEmployeeDTO.employee_email_address,
+    });
+    if (isEmailExist && isEmailExist._id != updateEmployeeDTO.employee_id) {
+      throw new ConflictException('Email address already exist');
+    }
+    const isMobileNumberExist = await this.EmployeeModel.findOne({
+      employee_mobile_number: updateEmployeeDTO.employee_mobile_number,
+    });
+    if (
+      isMobileNumberExist &&
+      isMobileNumberExist._id != updateEmployeeDTO.employee_id
+    ) {
+      throw new ConflictException('Mobile number already exist');
+    }
     const updateEmployee = await this.EmployeeModel.findByIdAndUpdate(
       updateEmployeeDTO.employee_id,
       {
@@ -75,5 +115,15 @@ export class EmployeeService {
       throw new Error('Employee not found');
     }
     return { message: 'Employee deleted successfully' };
+  }
+
+  async updateEmployeeStatus(id: string, status: boolean) {
+    const employee = await this.EmployeeModel.findByIdAndUpdate(id, {
+      is_employee_active: status,
+    });
+    if (!employee) {
+      throw new Error('Employee not found');
+    }
+    return { message: 'Employee status updated sucsessfully' };
   }
 }

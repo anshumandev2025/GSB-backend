@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { timestamp } from 'rxjs';
 
 @Schema({ timestamps: true })
 export class Employee extends Document {

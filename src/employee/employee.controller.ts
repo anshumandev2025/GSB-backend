@@ -4,8 +4,10 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
 import { CreateEmployeeDTO, UpdateEmployeeDTO } from './dto/employee.dto';
@@ -18,8 +20,13 @@ export class EmployeeController {
     return this.employeeService.createEmployee(createEmployeeDTO);
   }
   @Get()
-  async getAllEmployees() {
-    return this.employeeService.getAllEmployees();
+  async getAllEmployees(
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('query') query: string,
+    @Query('filter') filter: string,
+  ) {
+    return this.employeeService.getAllEmployees(page, limit, query, filter);
   }
   @Put()
   async updateEmployee(@Body() updateEmployeeDTO: UpdateEmployeeDTO) {
@@ -28,5 +35,12 @@ export class EmployeeController {
   @Delete(':id')
   async deleteEmployeeById(@Param() params: any) {
     return this.employeeService.deleteEmployee(params.id);
+  }
+  @Patch(':id')
+  async updateEmployeeStatus(
+    @Param() params: any,
+    @Query('status') status: boolean,
+  ) {
+    return this.employeeService.updateEmployeeStatus(params.id, status);
   }
 }
