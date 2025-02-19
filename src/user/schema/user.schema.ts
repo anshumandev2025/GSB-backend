@@ -23,6 +23,9 @@ export class User extends Document {
 
   @Prop()
   user_otp: string;
+
+  @Prop({ default: false })
+  user_isSubscribed: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
