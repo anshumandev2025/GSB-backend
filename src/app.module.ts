@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { ProductModule } from './product/product.module';
 import { OrderModule } from './order/order.module';
 import { VideoModule } from './video/video.module';
+import { DietModule } from './diet/diet.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { VideoModule } from './video/video.module';
     ProductModule,
     OrderModule,
     VideoModule,
+    DietModule,
   ],
   controllers: [AppController],
   providers: [AppService],
