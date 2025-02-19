@@ -10,6 +10,7 @@ import { OrderModule } from './order/order.module';
 import { VideoModule } from './video/video.module';
 import { DietModule } from './diet/diet.module';
 import { ConsultationModule } from './consultation/consultation.module';
+import { QuestionModule } from './question/question.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ConsultationModule } from './consultation/consultation.module';
     VideoModule,
     DietModule,
     ConsultationModule,
+    QuestionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
