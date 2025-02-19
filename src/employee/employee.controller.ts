@@ -15,7 +15,7 @@ import { CreateEmployeeDTO, UpdateEmployeeDTO } from './dto/employee.dto';
 @Controller('employee')
 export class EmployeeController {
   constructor(private readonly employeeService: EmployeeService) {}
-  @Post('create')
+  @Post()
   async createEmployee(@Body() createEmployeeDTO: CreateEmployeeDTO) {
     return this.employeeService.createEmployee(createEmployeeDTO);
   }

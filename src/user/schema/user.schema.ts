@@ -12,7 +12,7 @@ export class User extends Document {
   @Prop({ isRequired: true })
   user_mobile_number: string;
 
-  @Prop({ default: 'IBS' })
+  @Prop({ isRequired: true })
   user_goal: string;
 
   @Prop({ default: true })
@@ -20,6 +20,9 @@ export class User extends Document {
 
   @Prop({ isRequired: true })
   user_password: string;
+
+  @Prop()
+  user_otp: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
