@@ -17,6 +17,9 @@ export class Employee extends Document {
 
   @Prop({ default: true })
   is_employee_active: boolean;
+
+  @Prop({ default: false })
+  is_admin: boolean;
 }
 
 export const EmployeeSchema = SchemaFactory.createForClass(Employee);

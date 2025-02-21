@@ -24,11 +24,43 @@ export class ProductService {
     return product.save();
   }
 
-  async getAllProducts(): Promise<Product[]> {
-    return this.ProductModel.find();
+  async getAllProducts(
+    page: number = 1,
+    limit: number = 10,
+    search: string = '',
+    filter: string = '',
+  ) {
+    const skip = (page - 1) * limit;
+    const queryFilter: any = {};
+    if (search) {
+      queryFilter.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } },
+      ];
+    }
+    if (filter) {
+      queryFilter.category = filter;
+    }
+    const products = await this.ProductModel.find(queryFilter)
+      .skip(skip)
+      .limit(limit)
+      .exec();
+    const total = await this.ProductModel.countDocuments().exec();
+    return { data: products, total };
   }
 
-  async updateProduct(updateProductDTO: UpdateProductDTO) {
+  async updateProduct(
+    updateProductDTO: UpdateProductDTO,
+    file: Express.Multer.File,
+  ) {
+    if (file) {
+      const productDetails = await this.ProductModel.findById(
+        updateProductDTO.id,
+      );
+      //@ts-ignore
+      const key = new URL(productDetails?.image).pathname.substring(1);
+      await this.s3Service.updateFile(key, file);
+    }
     const product = await this.ProductModel.findByIdAndUpdate(
       updateProductDTO.id,
       { ...updateProductDTO },
@@ -42,8 +74,11 @@ export class ProductService {
 
   async deleteProduct(id: string) {
     const product = await this.ProductModel.findByIdAndDelete(id);
+    //@ts-ignore
+    const key = new URL(product?.image).pathname.substring(1);
+    await this.s3Service.deleteFile(key);
     if (!product) {
-      throw new Error('Prodcut is not found');
+      throw new Error('Product is not found');
     }
     return { message: 'Product deleted successfully' };
   }

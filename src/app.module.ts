@@ -12,6 +12,7 @@ import { DietModule } from './diet/diet.module';
 import { ConsultationModule } from './consultation/consultation.module';
 import { QuestionModule } from './question/question.module';
 import { CommonModule } from './common/common.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { CommonModule } from './common/common.module';
     ConsultationModule,
     QuestionModule,
     CommonModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -64,11 +64,13 @@ export class EmployeeService {
     return newEmployee;
   }
 
-  async validateUser(
+  async validateEmployee(
     email: string,
     password: string,
   ): Promise<Employee | null> {
-    const employee = await this.EmployeeModel.findOne({ email });
+    const employee = await this.EmployeeModel.findOne({
+      employee_email_address: email,
+    });
     if (!employee) return null;
 
     const isMatch = await bcrypt.compare(password, employee?.employee_password); // 👈 Compare password

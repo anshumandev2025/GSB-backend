@@ -12,8 +12,8 @@ export class Product extends Document {
   @Prop({ isRequired: true })
   description: string;
 
-  @Prop({ isRequired: true })
-  category: string;
+  // @Prop({ isRequired: true })
+  // category: string;
 
   @Prop({ isRequired: true })
   image: string;

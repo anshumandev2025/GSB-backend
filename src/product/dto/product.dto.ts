@@ -15,9 +15,9 @@ export class CreateProductDTO {
   @IsString()
   description: string;
 
-  @IsNotEmpty()
-  @IsString()
-  category: string;
+  // @IsNotEmpty()
+  // @IsString()
+  // category: string;
 }
 
 export class UpdateProductDTO {
@@ -36,12 +36,4 @@ export class UpdateProductDTO {
   @IsNotEmpty()
   @IsString()
   description: string;
-
-  @IsNotEmpty()
-  @IsString()
-  category: string;
-
-  @IsNotEmpty()
-  @IsUrl()
-  image: string;
 }
