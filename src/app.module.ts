@@ -11,6 +11,7 @@ import { VideoModule } from './video/video.module';
 import { DietModule } from './diet/diet.module';
 import { ConsultationModule } from './consultation/consultation.module';
 import { QuestionModule } from './question/question.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { QuestionModule } from './question/question.module';
     DietModule,
     ConsultationModule,
     QuestionModule,
+    CommonModule,
   ],
   controllers: [AppController],
   providers: [AppService],

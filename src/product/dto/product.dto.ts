@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsNumber, IsString, IsUrl } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateProductDTO {
   @IsNotEmpty()
@@ -6,6 +7,7 @@ export class CreateProductDTO {
   name: string;
 
   @IsNotEmpty()
+  @Type(() => Number) // Converts string to number
   @IsNumber()
   price: number;
 
@@ -14,8 +16,8 @@ export class CreateProductDTO {
   description: string;
 
   @IsNotEmpty()
-  @IsUrl()
-  image: string;
+  @IsString()
+  category: string;
 }
 
 export class UpdateProductDTO {
@@ -34,6 +36,10 @@ export class UpdateProductDTO {
   @IsNotEmpty()
   @IsString()
   description: string;
+
+  @IsNotEmpty()
+  @IsString()
+  category: string;
 
   @IsNotEmpty()
   @IsUrl()

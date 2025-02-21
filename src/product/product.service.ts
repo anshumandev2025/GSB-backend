@@ -3,15 +3,24 @@ import { Product } from './schema/product.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateProductDTO, UpdateProductDTO } from './dto/product.dto';
+import { S3Service } from 'src/common/s3.service';
 
 @Injectable()
 export class ProductService {
   constructor(
+    private readonly s3Service: S3Service,
     @InjectModel(Product.name) private ProductModel: Model<Product>,
   ) {}
 
-  async createProduct(createProductDTO: CreateProductDTO): Promise<Product> {
-    const product = new this.ProductModel({ ...createProductDTO });
+  async createProduct(
+    createProductDTO: CreateProductDTO,
+    file: Express.Multer.File,
+  ): Promise<Product> {
+    const imageUrl = await this.s3Service.uploadFile(file);
+    const product = new this.ProductModel({
+      ...createProductDTO,
+      image: imageUrl.url,
+    });
     return product.save();
   }
 
