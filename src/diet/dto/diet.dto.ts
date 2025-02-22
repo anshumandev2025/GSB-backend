@@ -10,10 +10,6 @@ export class CreateDietDTO {
   description: string;
 
   @IsNotEmpty()
-  @IsUrl()
-  pdf_url: string;
-
-  @IsNotEmpty()
   @IsString()
   category: string;
 
@@ -34,10 +30,6 @@ export class UpdateDietDTO {
   @IsNotEmpty()
   @IsString()
   description: string;
-
-  @IsNotEmpty()
-  @IsUrl()
-  pdf_url: string;
 
   @IsNotEmpty()
   @IsString()

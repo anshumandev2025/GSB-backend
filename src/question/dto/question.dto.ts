@@ -12,6 +12,10 @@ export class CreateQuestionDTO {
   @IsNotEmpty()
   @IsArray()
   options: string[];
+
+  @IsNotEmpty()
+  @IsBoolean()
+  is_multiple_correct: boolean;
 }
 
 export class UpdateQuestionDTO {

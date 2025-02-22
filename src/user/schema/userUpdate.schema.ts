@@ -10,7 +10,7 @@ export class UserUpdate extends Document {
   title: string;
 
   @Prop({ isRequired: true })
-  descriptions: string;
+  description: string;
 
   @Prop({ isRequired: true })
   image: string;

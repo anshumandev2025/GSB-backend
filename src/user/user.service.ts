@@ -23,8 +23,42 @@ export class UserService {
   ) {}
 
   //user Info services
-  async getAllUser(): Promise<User[]> {
-    return this.UserModel.find().select('-user_password').exec();
+  async getAllUser(
+    page: number = 1,
+    limit: number = 10,
+    search: string = '',
+    filter: string = '',
+    isSubscribed: boolean | null = null,
+  ) {
+    const skip = (page - 1) * 10;
+    const queryFilter: any = {};
+    if (search) {
+      queryFilter.$or = [
+        {
+          user_name: { $regex: search, $options: 'i' },
+        },
+        {
+          user_email_address: { $regex: search, $options: 'i' },
+        },
+        {
+          user_mobile_number: { $regex: search, $options: 'i' },
+        },
+      ];
+    }
+    if (filter) {
+      queryFilter.user_goal = filter;
+    }
+    if (isSubscribed) {
+      queryFilter.user_isSubscribed = isSubscribed;
+    }
+    const users = await this.UserModel.find(queryFilter)
+      .select('-user_password')
+      .skip(skip)
+      .limit(limit)
+      .exec();
+    const total = await this.UserModel.countDocuments(queryFilter);
+
+    return { data: users, total };
   }
 
   async createUserService(createUserDTO: CreateUserDTO) {
@@ -88,12 +122,31 @@ export class UserService {
   }
 
   //user update services
-  async getAllUsersUpdates(): Promise<UserUpdate[]> {
+  async getAllUsersUpdates(page: number, limit: number, search: string) {
+    const queryFilter: any = {};
+    if (search) {
+      queryFilter.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { descriptions: { $regex: search, $options: 'i' } },
+        { 'users_id.user_name': { $regex: search, $options: 'i' } },
+        { 'users_id.user_email_address': { $regex: search, $options: 'i' } },
+      ];
+    }
     return this.UserUpdateModel.find({});
   }
 
-  async getUserUpdateById(userId: string): Promise<UserUpdate[]> {
-    return this.UserUpdateModel.find({ user_id: userId });
+  async getUserUpdateById(
+    userId: string,
+    page: number = 1,
+    limit: number = 10,
+  ) {
+    const skip = (page - 1) * limit;
+    const userUpdates = await this.UserUpdateModel.find({ user_id: userId })
+      .skip(skip)
+      .limit(limit)
+      .exec();
+    const total = await this.UserUpdateModel.countDocuments();
+    return { data: userUpdates, total };
   }
   async createUserUpdate(
     createUserUpdate: CreateUserUpdateDTO,
@@ -139,8 +192,20 @@ export class UserService {
     return this.UserStoryModel.find();
   }
 
-  async getAllStoryByUserId(userId: string): Promise<UserStory[]> {
-    return this.UserStoryModel.find({ user_id: userId });
+  async getAllStoryByUserId(
+    userId: string,
+    page: number = 1,
+    limit: number = 10,
+  ) {
+    const skip = (page - 1) * limit;
+
+    const userStory = await this.UserStoryModel.find({ user_id: userId })
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    const total = await this.UserModel.countDocuments();
+    return { data: userStory, total };
   }
 
   async createUserStory(

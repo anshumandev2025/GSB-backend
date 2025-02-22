@@ -15,9 +15,6 @@ export class User extends Document {
   @Prop({ isRequired: true })
   user_goal: string;
 
-  @Prop({ default: true })
-  user_isActive: boolean;
-
   @Prop({ isRequired: true })
   user_password: string;
 

@@ -1,4 +1,11 @@
-import { IsEnum, IsNotEmpty, IsString, IsUrl } from 'class-validator';
+import {
+  IsEmpty,
+  IsEnum,
+  IsNotEmpty,
+  IsString,
+  IsUrl,
+  ValidateIf,
+} from 'class-validator';
 
 export class CreateVideoDTO {
   @IsNotEmpty()
@@ -18,9 +25,10 @@ export class CreateVideoDTO {
   @IsString()
   category: string;
 
-  @IsNotEmpty()
-  @IsUrl()
-  video_url: string;
+  @ValidateIf((o) => o.type === 'youtube')
+  @IsNotEmpty({ message: 'Video URL is required for YouTube videos' })
+  @IsUrl({}, { message: 'Invalid URL' })
+  video_url?: string;
 }
 
 export class UpdateVideoDTO {

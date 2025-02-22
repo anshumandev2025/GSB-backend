@@ -33,7 +33,7 @@ export class EmployeeService {
       .limit(limit)
       .exec();
 
-    const total = await this.EmployeeModel.countDocuments().exec();
+    const total = await this.EmployeeModel.countDocuments(queryFilter).exec();
 
     return { data: employees, total };
   }

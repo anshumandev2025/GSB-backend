@@ -6,6 +6,8 @@ import {
   Param,
   Post,
   Put,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import {
@@ -16,14 +18,28 @@ import {
   EditUserUpdateDTO,
   UpdateUserDTO,
 } from './dto/user.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
   //user info controller
   @Get()
-  async getAllUser() {
-    return this.userService.getAllUser();
+  async getAllUser(
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('search') search: string,
+    @Query('filter') filter: string,
+    @Query('isSubscribed') isSubscribed: boolean,
+  ) {
+    return this.userService.getAllUser(
+      page,
+      limit,
+      search,
+      filter,
+      isSubscribed,
+    );
   }
   @Post()
   async createUser(@Body() createUserDTO: CreateUserDTO) {
@@ -48,8 +64,12 @@ export class UserController {
     return this.userService.getAllUsersStory();
   }
   @Get('story/:id')
-  async getAllStoryByUserId(@Param() params: any) {
-    return this.userService.getAllStoryByUserId(params.id);
+  async getAllStoryByUserId(
+    @Param() params: any,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.userService.getAllStoryByUserId(params.id, page, limit);
   }
 
   @Put('story')
@@ -73,12 +93,20 @@ export class UserController {
     return this.userService.createUserUpdate(createUserUpdateDTO);
   }
   @Get('update')
-  async getAllUpdates() {
-    return this.userService.getAllUsersUpdates();
+  async getAllUpdates(
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('search') search: string,
+  ) {
+    return this.userService.getAllUsersUpdates(page, limit, search);
   }
   @Get('update/:id')
-  async getAllUpdatesByUserId(@Param() params: any) {
-    return this.userService.getUserUpdateById(params.id);
+  async getAllUpdatesByUserId(
+    @Param() params: any,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.userService.getUserUpdateById(params.id, page, limit);
   }
 
   @Put('update')

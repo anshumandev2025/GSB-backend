@@ -37,7 +37,21 @@ export class QuestionService {
     return { meesage: 'Question deleted successfully' };
   }
 
-  async getAllQuestion() {
-    return this.questionModel.find();
+  async getAllQuestion(
+    page: number = 1,
+    limit: number = 10,
+    search: string = '',
+  ) {
+    const skip = (page - 1) * limit;
+    const querFilter: any = {};
+    if (search) {
+      querFilter.$or = [{ question: { $regex: search, $options: 'i' } }];
+    }
+    const question = await this.questionModel
+      .find(querFilter)
+      .skip(skip)
+      .limit(limit);
+    const total = await this.questionModel.countDocuments();
+    return { data: question, total };
   }
 }

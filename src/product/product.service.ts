@@ -45,7 +45,7 @@ export class ProductService {
       .skip(skip)
       .limit(limit)
       .exec();
-    const total = await this.ProductModel.countDocuments().exec();
+    const total = await this.ProductModel.countDocuments(queryFilter).exec();
     return { data: products, total };
   }
 
