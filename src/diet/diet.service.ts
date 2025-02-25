@@ -18,7 +18,6 @@ export class DietService {
     file: Express.Multer.File,
   ): Promise<Diet> {
     const pdfUrl = await this.s3Service.uploadFile(file);
-    console.log('pdf url-->', pdfUrl);
     const diet = new this.dietModel({ ...createDietDTO, pdf_url: pdfUrl.url });
     return diet.save();
   }
