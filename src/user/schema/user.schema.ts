@@ -19,7 +19,7 @@ export class User extends Document {
   user_password: string;
 
   @Prop()
-  user_otp: string;
+  user_otp: number;
 
   @Prop({ default: false })
   user_isSubscribed: string;

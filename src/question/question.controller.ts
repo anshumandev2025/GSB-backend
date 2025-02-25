@@ -19,7 +19,6 @@ export class QuestionController {
   constructor(private readonly questionService: QuestionService) {}
   @Post()
   async createQuestion(@Body() createQuestionDTO: CreateQuestionDTO) {
-    console.log('create dto-->', createQuestionDTO);
     return this.questionService.createQuestion(createQuestionDTO);
   }
 

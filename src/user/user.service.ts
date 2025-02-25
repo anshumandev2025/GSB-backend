@@ -244,4 +244,29 @@ export class UserService {
     }
     return { message: 'Story is deleted successfully' };
   }
+
+  async getUserByPhoneNumber(number: string) {
+    const user = this.UserModel.findOne({ user_mobile_number: number });
+    return user;
+  }
+
+  async updateUserOTP(userId: any, otp: number) {
+    const user = await this.UserModel.findByIdAndUpdate(userId, {
+      user_otp: otp,
+    });
+    if (!user) {
+      throw new Error('User not updated');
+    }
+    return user;
+  }
+
+  async verifyUserOTP(
+    mobile_number: string,
+    otp: number,
+  ): Promise<User | null> {
+    return this.UserModel.findOne({
+      user_mobile_number: mobile_number,
+      user_otp: otp,
+    });
+  }
 }
