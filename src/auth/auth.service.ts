@@ -77,6 +77,11 @@ export class AuthService {
     if (!user) {
       throw new BadRequestException('Invalid OTP. Please try again.');
     }
-    return { message: 'You are verified successfully' };
+    const payload = {
+      id: user._id,
+      email: user.user_email_address,
+    };
+    const token = this.jwtService.sign(payload);
+    return { message: 'You are verified successfully', token };
   }
 }

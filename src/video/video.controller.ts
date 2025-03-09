@@ -44,8 +44,9 @@ export class VideoController {
     @Query('page') page: number,
     @Query('limit') limit: number,
     @Query('search') search: string,
+    @Query('category') category: string,
   ) {
-    return this.videoService.getAllVideos(page, limit, search);
+    return this.videoService.getAllVideos(page, limit, search, category);
   }
 
   @Delete(':id')

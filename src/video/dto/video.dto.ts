@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import {
   IsEmpty,
   IsEnum,
@@ -23,6 +24,7 @@ export class CreateVideoDTO {
 
   @IsNotEmpty()
   @IsString()
+  @Transform(({ value }) => value.toLowerCase())
   category: string;
 
   @ValidateIf((o) => o.type === 'youtube')
@@ -49,11 +51,13 @@ export class UpdateVideoDTO {
   @IsEnum(['general', 'youtube', 'subscribe'])
   type: string;
 
-  @IsNotEmpty()
-  @IsUrl()
-  video_url: string;
+  @ValidateIf((o) => o.type === 'youtube')
+  @IsNotEmpty({ message: 'Video URL is required for YouTube videos' })
+  @IsUrl({}, { message: 'Invalid URL' })
+  video_url?: string;
 
   @IsNotEmpty()
   @IsString()
+  @Transform(({ value }) => value.toLowerCase())
   category: string;
 }

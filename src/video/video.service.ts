@@ -48,6 +48,7 @@ export class VideoService {
     page: number = 1,
     limit: number = 10,
     search: string = '',
+    category: string = '',
   ) {
     const skip = (page - 1) * limit;
     const queryFilters: any = {};
@@ -57,12 +58,15 @@ export class VideoService {
         { description: { $regex: search, $options: 'i' } },
       ];
     }
+    if (category) {
+      queryFilters.category = category.toLowerCase();
+    }
     const videos = await this.videoModel
       .find(queryFilters)
       .skip(skip)
       .limit(limit)
       .exec();
-    const total = await this.videoModel.countDocuments();
+    const total = await this.videoModel.countDocuments(queryFilters);
     return { data: videos, total };
   }
 
